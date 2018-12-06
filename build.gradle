@@ -1,6 +1,8 @@
 plugins {
     id 'java'
     id "edu.wpi.first.GradleRIO" version "2018.06.21"
+    id "com.snobot.simulator.plugin.SnobotSimulatorPlugin" version "2019-0.0.0" // Should point to the latest version at https://login.gradle.org/plugin/com.snobot.simulator.plugin.SnobotSimulatorPlugin
+
 }
 
 group 'Robot'
@@ -10,6 +12,7 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    
 }
 
 dependencies {
@@ -17,6 +20,8 @@ dependencies {
     compile wpilib()
     compile ctre()
     compile navx()
+    compile runSnobotSim
+    compile snobotSimVersions
 }
 
 def ROBOT_CLASS = "robot.Robot"
