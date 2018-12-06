@@ -1,10 +1,12 @@
 package robot.subsystems.drivetrain.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
+import robot.subsystems.drivetrain.Drivetrain;
 import robot.subsystems.drivetrain.pure_pursuit.*;
 import robot.subsystems.drivetrain.pure_pursuit.Constants;
 
-import static robot.Robot.drivetrain;
+//import static robot.Robot.drivetrain;
 
 /**
  * The methods written here are all part of the Pure pursuit algorithm
@@ -12,6 +14,7 @@ import static robot.Robot.drivetrain;
  * https://www.chiefdelphi.com/media/papers/download/5533
  */
 public class PurePursue extends Command {
+    private Drivetrain drivetrain;
     private Path path; //Command specific path to follow
     private Point currentPoint; //holds X and Y variables for the robot
     private Point currentLookahead; //holds X and Y variables for the Lookahead point
@@ -36,7 +39,8 @@ public class PurePursue extends Command {
      * @param kA              driving constant. Multiplied by the robots acceleration.
      * @param kV              driving constant. Multiplied by the target velocity of the nearest point.
      */
-    public PurePursue(Path path, boolean isReversed, double lookaheadRadius, double kP, double kA, double kV) {
+    public PurePursue(Drivetrain subsystem, Path path, boolean isReversed, double lookaheadRadius, double kP, double kA, double kV) {
+        drivetrain = subsystem;
         requires(drivetrain);
         this.lookaheadRadius = lookaheadRadius;
         this.kP = kP;
@@ -44,6 +48,7 @@ public class PurePursue extends Command {
         this.kV = kV;
         direction = isReversed ? -1 : 1;
         this.path = path;
+
     }
 
     // Called just before this Command runs the first time
