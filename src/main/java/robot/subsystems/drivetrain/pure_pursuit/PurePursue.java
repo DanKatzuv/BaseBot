@@ -21,6 +21,8 @@ public class PurePursue extends Command {
     private double lastLookaheadDistance; //distance of the last lookahead from the start of the path
     private double kP, kA, kV;
     private double lookaheadRadius;
+    private boolean isRelative;
+    private boolean isReversed;
 
     /**
      * An implementation of these command class. for more information see documentation on the wpilib command class.
@@ -32,7 +34,7 @@ public class PurePursue extends Command {
      * @param kA              driving constant. Multiplied by the robots acceleration.
      * @param kV              driving constant. Multiplied by the target velocity of the nearest point.
      */
-    public PurePursue(Path path, boolean isReversed, double lookaheadRadius, double kP, double kA, double kV) {
+    public PurePursue(Path path, double lookaheadRadius, double kP, double kA, double kV, boolean isRelative, boolean isReversed) {
         requires(drivetrain);
         this.lookaheadRadius = lookaheadRadius;
         this.kP = kP;
@@ -40,6 +42,9 @@ public class PurePursue extends Command {
         this.kV = kV;
         direction = isReversed ? -1 : 1;
         this.path = path;
+
+        this.isReversed = isReversed;
+        this.isRelative = isRelative;
     }
 
     // Called just before this Command runs the first time
