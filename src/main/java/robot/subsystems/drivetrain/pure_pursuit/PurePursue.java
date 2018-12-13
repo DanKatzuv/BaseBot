@@ -60,7 +60,6 @@ public class PurePursue extends Command {
         currentLookahead = path.getWaypoint(0);
         lastLeftSpeed = direction * drivetrain.getLeftSpeed();
         lastRightSpeed = direction * drivetrain.getRightSpeed();
-        drivetrain.resetLocation();
     }
 
     // Called repeatedly when this Command is scheduled to run

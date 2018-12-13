@@ -112,7 +112,6 @@ public class Robot extends TimedRobot {
         PurePursue pursue = new PurePursue(path, Constants.LOOKAHEAD_DISTANCE, Constants.kP, Constants.kA, Constants.kV, false, false);
 
         //Print the variables for testing.
-        System.out.println(path);
         SmartDashboard.putString("pursue command", "start");
         SmartDashboard.putString("last waypoint", path.getWaypoint(path.length()-1).toString());
 
