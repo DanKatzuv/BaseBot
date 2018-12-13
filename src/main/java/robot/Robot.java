@@ -8,11 +8,16 @@
 package robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import robot.subsystems.drivetrain.Drivetrain;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -59,6 +64,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+
     }
 
     @Override
@@ -81,7 +87,6 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         drivetrain.resetEncoders();
         m_autonomousCommand = m_chooser.getSelected();
-
         /*
          * String autoSelected = SmartDashboard.getString("Auto Selector",
          * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -101,6 +106,25 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        try {
+            PrintWriter pw = new PrintWriter(new File("test.csv"));
+            StringBuilder sb = new StringBuilder();
+            sb.append("Time");
+            sb.append("X");
+            sb.append("Y");
+            sb.append("\n");
+
+            sb.append(Timer.getMatchTime());
+            sb.append(Robot.drivetrain.getXPOSITION());
+            sb.append(Robot.drivetrain.getYPOSITION());
+            sb.append("/n");
+
+            pw.write(sb.toString());
+            pw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

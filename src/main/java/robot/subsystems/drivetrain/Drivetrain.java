@@ -23,6 +23,8 @@ public class Drivetrain extends Subsystem {
     private final VictorSPX leftBack = new VictorSPX(Ports.leftBackMotor);
     private final VictorSPX rightForward = new VictorSPX(Ports.rightForwardMotor);
     private final VictorSPX rightBack = new VictorSPX(Ports.rightBackMotor);
+    private final double CurrentxPosition = 0;
+    private final double CurrentyPosition = 0;
 
     private final Encoder leftEncoder = new Encoder(Ports.leftEncoderChannelA, Ports.leftEncoderChannelB);
     private final Encoder rightEncoder = new Encoder(Ports.rightEncoderChannelA, Ports.rightEncoderChannelB);
@@ -85,5 +87,13 @@ public class Drivetrain extends Subsystem {
     public void resetEncoders() {
         leftEncoder.reset();
         rightEncoder.reset();
+    }
+
+    public double getXPOSITION() {
+        return CurrentxPosition;
+    }
+
+    public double getYPOSITION() {
+        return CurrentyPosition;
     }
 }
