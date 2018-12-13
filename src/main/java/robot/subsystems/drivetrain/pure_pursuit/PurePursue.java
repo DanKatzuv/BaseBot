@@ -49,7 +49,11 @@ public class PurePursue extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        currentPoint = new Waypoint(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY());
+        if(!isRelative)
+            currentPoint = new Point(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY());
+        else
+            currentPoint = new Point(0, 0);
+
         lastLeftEncoder = drivetrain.getLeftDistance();
         lastRightEncoder = drivetrain.getRightDistance();
         //initAngle = drivetrain.getAngle() + (direction == -1 ? 180 : 0);
