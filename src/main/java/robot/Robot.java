@@ -119,9 +119,9 @@ public class Robot extends TimedRobot {
 
             sb.append(Timer.getMatchTime());
             sb.append(',');
-            sb.append(Robot.drivetrain.getXPOSITION());
+            sb.append(Robot.drivetrain.getLeftDistance());
             sb.append(',');
-            sb.append(Robot.drivetrain.getYPOSITION());
+            sb.append(Robot.drivetrain.getRightDistance());
             sb.append("/n");
 
             pw.write(sb.toString());
