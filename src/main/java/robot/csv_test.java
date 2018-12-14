@@ -36,7 +36,6 @@ public class csv_test {
             sb.append(',');
             sb.append(Math.random());
             sb.append("\n");
-            pw.write(sb.toString());
 
 
             try {
@@ -48,7 +47,7 @@ public class csv_test {
                 break;
             }
         }
-
+        pw.write(sb.toString());
         pw.close();
     }
 }
