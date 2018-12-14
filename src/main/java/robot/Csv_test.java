@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-public class csv_test {
+public class Csv_test {
     public static void main(String[] args) {
         PrintWriter pw = null;
         StringBuilder sb = new StringBuilder();
