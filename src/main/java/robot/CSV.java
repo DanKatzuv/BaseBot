@@ -20,6 +20,8 @@ public class CSV {
             count_args++;
         }
         sb.append('\n');
+        pw.write(sb.toString());
+        sb.setLength(0);
 
 
     }
@@ -34,15 +36,14 @@ public class CSV {
             }
             sb.append('\n');
         }
+        pw.write(sb.toString());
+        sb.setLength(0);
     }
 
     public void close() {
-
+        pw.close();
     }
 
-    public boolean isClosed() {
-        return false;
-    }
 
 }
 
