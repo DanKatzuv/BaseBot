@@ -8,16 +8,13 @@
 package robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import robot.subsystems.drivetrain.Drivetrain;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,7 +26,7 @@ import java.io.PrintWriter;
 public class Robot extends TimedRobot {
     public static final Drivetrain drivetrain = new Drivetrain();
     public static OI m_oi;
-
+    public static CSV csv;
     Command m_autonomousCommand;
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -93,7 +90,11 @@ public class Robot extends TimedRobot {
          * = new MyAutoCommand(); break; case "Default Auto": default:
          * autonomousCommand = new ExampleCommand(); break; }
          */
-
+        try {
+            csv = new CSV("test.csv", "left distance", "right distance");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
@@ -107,28 +108,8 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
-        try {
-            PrintWriter pw = new PrintWriter(new File("test.csv"));
-            StringBuilder sb = new StringBuilder();
-            sb.append("Time");
-            sb.append(',');
-            sb.append("X");
-            sb.append(',');
-            sb.append("Y");
-            sb.append("\n");
+        csv.update(drivetrain.getLeftDistance(), drivetrain.getRightDistance());
 
-            sb.append(Timer.getMatchTime());
-            sb.append(',');
-            sb.append(Robot.drivetrain.getLeftDistance());
-            sb.append(',');
-            sb.append(Robot.drivetrain.getRightDistance());
-            sb.append("/n");
-
-            pw.write(sb.toString());
-            pw.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
     }
 

@@ -26,18 +26,18 @@ public class CSV {
 
     }
 
-    public void update(long... arguments) {
-        int count = count_args;
-        while (count > 0) {
-            for (long arguement : arguments) {
+    public void update(double... arguments) {
+        if (arguments.length == count_args) {
+            for (double arguement : arguments) {
                 sb.append(arguement);
                 sb.append(',');
-                count--;
             }
             sb.append('\n');
-        }
-        pw.write(sb.toString());
-        sb.setLength(0);
+
+            pw.write(sb.toString());
+            sb.setLength(0);
+        } else
+            throw new StackOverflowError("Amount of arguments not matching defined columns. " + arguments.length + " arguments were given, " + count_args + "were defined.");
     }
 
     public void close() {
