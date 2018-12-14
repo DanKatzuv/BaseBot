@@ -94,6 +94,7 @@ public class Robot extends TimedRobot {
          * autonomousCommand = new ExampleCommand(); break; }
          */
 
+
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
             m_autonomousCommand.start();
@@ -110,12 +111,16 @@ public class Robot extends TimedRobot {
             PrintWriter pw = new PrintWriter(new File("test.csv"));
             StringBuilder sb = new StringBuilder();
             sb.append("Time");
+            sb.append(',');
             sb.append("X");
+            sb.append(',');
             sb.append("Y");
             sb.append("\n");
 
             sb.append(Timer.getMatchTime());
+            sb.append(',');
             sb.append(Robot.drivetrain.getXPOSITION());
+            sb.append(',');
             sb.append(Robot.drivetrain.getYPOSITION());
             sb.append("/n");
 
