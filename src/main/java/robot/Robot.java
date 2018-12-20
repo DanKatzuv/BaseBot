@@ -10,6 +10,7 @@ package robot;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -106,7 +107,7 @@ public class Robot extends TimedRobot {
          * autonomousCommand = new ExampleCommand(); break; }
          */
         try {
-            csv = new CSV("test.csv", "left distance", "right distance");
+            csv = new CSV("test.csv", "left distance", "right distance", "time");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -147,7 +148,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putString("current location", drivetrain.currentLocation.getX() + " " + drivetrain.currentLocation.getY());
         SmartDashboard.putNumber("current Angle" , navx.getAngle());
         //take the current pint and update her into the csv file
-        csv.update(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY());
+        csv.update(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY(), Timer.getMatchTime());
 
 
     }
