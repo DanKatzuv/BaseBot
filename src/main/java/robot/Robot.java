@@ -7,12 +7,18 @@
 
 package robot;
 
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import robot.subsystems.drivetrain.Drivetrain;
+import robot.subsystems.drivetrain.pure_pursuit.Constants;
+import robot.subsystems.drivetrain.pure_pursuit.Path;
+import robot.subsystems.drivetrain.pure_pursuit.PurePursue;
+import robot.subsystems.drivetrain.pure_pursuit.Waypoint;
 
 import java.io.FileNotFoundException;
 
@@ -25,6 +31,9 @@ import java.io.FileNotFoundException;
  */
 public class Robot extends TimedRobot {
     public static final Drivetrain drivetrain = new Drivetrain();
+    public static AHRS navx = new AHRS(SPI.Port.kMXP);
+
+    
     public static OI m_oi;
     public static CSV csv;
     Command m_autonomousCommand;
@@ -40,6 +49,7 @@ public class Robot extends TimedRobot {
         //m_chooser.setDefaultOption("Default Auto", new JoystickDrive());
         // chooser.addOption("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", m_chooser);
+        navx.reset();
     }
 
     /**
@@ -52,6 +62,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
+
     }
 
     /**
@@ -82,7 +93,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        navx.reset();
+        drivetrain.resetLocation();
         drivetrain.resetEncoders();
+
+        // String autoSelected = SmartDashboard.getString("Auto Selector","Default"); switch(autoSelected) { case "My Auto": autonomousCommand = new MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new ExampleCommand(); break; }
         m_autonomousCommand = m_chooser.getSelected();
         /*
          * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -97,9 +112,27 @@ public class Robot extends TimedRobot {
         }
 
         // schedule the autonomous command (example)
+        m_autonomousCommand = m_chooser.getSelected();
         if (m_autonomousCommand != null) {
             m_autonomousCommand.start();
         }
+
+        //Create the path and points.
+        Path path = new Path();
+        path.appendWaypoint(new Waypoint(0, 0));
+        path.appendWaypoint(new Waypoint(0, 1));
+        path.appendWaypoint(new Waypoint(-2, 2));
+        //Generate the path to suit the pure pursuit.
+        path.generateAll(Constants.WEIGHT_DATA, Constants.WEIGHT_SMOOTH, Constants.TOLERANCE, Constants.MAX_ACCEL, Constants.MAX_PATH_VELOCITY);
+
+        PurePursue pursue = new PurePursue(path, false, Constants.LOOKAHEAD_DISTANCE, Constants.kP, Constants.kA, Constants.kV);
+
+        //Print the variables for testing.
+        System.out.println(path);
+        SmartDashboard.putString("pursue command", "start");
+        SmartDashboard.putString("last waypoint", path.getWaypoint(path.length()-1).toString());
+
+        pursue.start(); //Run the command.
     }
 
     /**
@@ -107,7 +140,13 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
+
         Scheduler.getInstance().run();
+        SmartDashboard.putNumber("right distance", drivetrain.getRightDistance());
+        SmartDashboard.putNumber("left distance", drivetrain.getLeftDistance());
+        SmartDashboard.putString("current location", drivetrain.currentLocation.getX() + " " + drivetrain.currentLocation.getY());
+        SmartDashboard.putNumber("current Angle" , navx.getAngle());
+
         csv.update(drivetrain.getLeftDistance(), drivetrain.getRightDistance());
 
 
@@ -122,6 +161,8 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+        navx.reset();
+
     }
 
     /**
@@ -129,7 +170,12 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+
         Scheduler.getInstance().run();
+        SmartDashboard.putNumber("current Angle teleop" , navx.getAngle());
+        SmartDashboard.putNumber("current left encoder", drivetrain.getLeftDistance());
+        SmartDashboard.putNumber("current right encoder" , drivetrain.getRightDistance());
+
     }
 
     /**
