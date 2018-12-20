@@ -146,8 +146,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("left distance", drivetrain.getLeftDistance());
         SmartDashboard.putString("current location", drivetrain.currentLocation.getX() + " " + drivetrain.currentLocation.getY());
         SmartDashboard.putNumber("current Angle" , navx.getAngle());
-
-        csv.update(drivetrain.getLeftDistance(), drivetrain.getRightDistance());
+        //take the current pint and update her into the csv file
+        csv.update(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY());
 
 
     }
