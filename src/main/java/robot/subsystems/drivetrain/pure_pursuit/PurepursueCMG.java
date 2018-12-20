@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class isRelativePurepursue extends CommandGroup {
+public class PurepursueCMG extends CommandGroup {
 
-    public isRelativePurepursue() {
+    public PurepursueCMG() {
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
