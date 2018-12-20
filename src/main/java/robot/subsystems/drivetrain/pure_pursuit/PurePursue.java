@@ -45,6 +45,15 @@ public class PurePursue extends Command {
 
         this.isRelative = isRelative;
     }
+    public PurePursue(PurePursue pursue, boolean isReversed){
+        requires(drivetrain);
+        this.lookaheadRadius = pursue.lookaheadRadius;
+        this.kP = pursue.kP;
+        this.kA = pursue.kA;
+        this.kV = pursue.kV;
+        this.path = pursue.path;
+        this.isRelative = pursue.isRelative;
+    }
 
     // Called just before this Command runs the first time
     protected void initialize() {
