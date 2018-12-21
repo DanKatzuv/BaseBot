@@ -1,6 +1,8 @@
 package robot.subsystems.drivetrain;
 
 public class Constants {
+    public final static double ROBOT_WIDTH = 0.6; //the distance between the left and right wheels on the robot
+
     static final boolean LEFT_REVERSED = false;
     static final boolean RIGHT_REVERSED = true;
     public static final double MAX_RATE = 0.3;
