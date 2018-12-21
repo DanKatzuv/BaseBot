@@ -21,7 +21,7 @@ public class CSV {
         }
         sb.append('\n');
         pw.write(sb.toString());
-        sb.setLength(0);
+        sb = new StringBuilder();
 
 
     }
@@ -35,7 +35,7 @@ public class CSV {
             sb.append('\n');
 
             pw.write(sb.toString());
-            sb.setLength(0);
+            sb = new StringBuilder();
         } else
             throw new StackOverflowError("Amount of arguments not matching defined columns. " + arguments.length + " arguments were given, " + count_args + "were defined.");
     }
