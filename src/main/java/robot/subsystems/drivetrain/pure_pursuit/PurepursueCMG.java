@@ -13,7 +13,7 @@ public class PurepursueCMG extends CommandGroup {
         //      addSequential(new Command2());
         // these will run in order.
         for (PurePursue pur : pursue) {
-            addParallel(pur);
+            addSequential(pur);
         }
         // To run multiple commands at the same time,
         // use addParallel()
