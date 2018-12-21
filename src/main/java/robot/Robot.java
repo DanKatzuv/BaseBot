@@ -10,6 +10,7 @@ package robot;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,6 +20,8 @@ import robot.subsystems.drivetrain.pure_pursuit.Constants;
 import robot.subsystems.drivetrain.pure_pursuit.Path;
 import robot.subsystems.drivetrain.pure_pursuit.PurePursue;
 import robot.subsystems.drivetrain.pure_pursuit.Waypoint;
+
+import java.io.FileNotFoundException;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,7 +36,7 @@ public class Robot extends TimedRobot {
 
     
     public static OI m_oi;
-
+    public static CSV csv;
     Command m_autonomousCommand;
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -70,6 +73,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        csv.close();
     }
 
     @Override
@@ -95,6 +99,19 @@ public class Robot extends TimedRobot {
         drivetrain.resetEncoders();
 
         // String autoSelected = SmartDashboard.getString("Auto Selector","Default"); switch(autoSelected) { case "My Auto": autonomousCommand = new MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new ExampleCommand(); break; }
+        m_autonomousCommand = m_chooser.getSelected();
+        /*
+         * String autoSelected = SmartDashboard.getString("Auto Selector",
+         * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
+         * = new MyAutoCommand(); break; case "Default Auto": default:
+         * autonomousCommand = new ExampleCommand(); break; }
+         */
+        try {
+            csv = new CSV("test.csv", "left distance", "right distance", "time");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         // schedule the autonomous command (example)
         m_autonomousCommand = m_chooser.getSelected();
         if (m_autonomousCommand != null) {
@@ -130,6 +147,9 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("left distance", drivetrain.getLeftDistance());
         SmartDashboard.putString("current location", drivetrain.currentLocation.getX() + " " + drivetrain.currentLocation.getY());
         SmartDashboard.putNumber("current Angle" , navx.getAngle());
+        //take the current pint and update her into the csv file
+        csv.update(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY(), Timer.getMatchTime());
+
 
     }
 
