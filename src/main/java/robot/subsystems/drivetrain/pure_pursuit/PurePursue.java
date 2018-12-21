@@ -90,7 +90,6 @@ public class PurePursue extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-        end();
     }
 
     /**
@@ -245,7 +244,7 @@ public class PurePursue extends Command {
      * @author lior
      */
     public double getRightSpeedVoltage(Path path) {
-        double target_accel = (drivetrain.getRightSpeed() - lastRightSpeed) / 0.02;
+        double target_accel = (drivetrain.getRightSpeed() - lastRightSpeed) / Constants.CYCLE_TIME;
         lastRightSpeed = drivetrain.getRightSpeed();
         return kV * (closestPoint(path).getSpeed() * (2 - curvatureCalculate() * Constants.ROBOT_WIDTH) / 2) +
                 kA * (target_accel) +
@@ -261,7 +260,7 @@ public class PurePursue extends Command {
      * @author lior
      */
     public double getLeftSpeedVoltage(Path path) {
-        double target_accel = (drivetrain.getLeftSpeed() - lastLeftSpeed) / 0.02;
+        double target_accel = (drivetrain.getLeftSpeed() - lastLeftSpeed) / Constants.CYCLE_TIME;
         lastLeftSpeed = drivetrain.getLeftSpeed();
         return kV * (closestPoint(path).getSpeed() * (2 + curvatureCalculate() * Constants.ROBOT_WIDTH) / 2) +
                 kA * (target_accel) +

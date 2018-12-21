@@ -2,6 +2,7 @@ package robot.subsystems.drivetrain.pure_pursuit;
 
 public class Constants {
     //DRIVING CONSTANTS
+
     public final static double LOOKAHEAD_DISTANCE = 0.45; //in meters
     public static final double MAX_VELOCITY = 3.762;
 
