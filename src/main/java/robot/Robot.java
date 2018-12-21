@@ -21,7 +21,13 @@ import robot.subsystems.drivetrain.pure_pursuit.Path;
 import robot.subsystems.drivetrain.pure_pursuit.PurePursue;
 import robot.subsystems.drivetrain.pure_pursuit.Waypoint;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -37,6 +43,9 @@ public class Robot extends TimedRobot {
     
     public static OI m_oi;
     public CSV csv;
+
+
+
     Command m_autonomousCommand;
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -51,6 +60,20 @@ public class Robot extends TimedRobot {
         // chooser.addOption("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", m_chooser);
         navx.reset();
+        File file = new File("test.csv");
+        Set<PosixFilePermission> perms = new HashSet<>();
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.OWNER_WRITE);
+        try {
+            Files.setPosixFilePermissions(file.toPath(), perms);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            csv = new CSV("test.csv", "left distance", "right distance", "time");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -73,8 +96,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
-        csv.close();
+        if (csv != null) csv.close();
+        if (csv == null) System.out.println(6669);
     }
+
 
     @Override
     public void disabledPeriodic() {
@@ -98,12 +123,9 @@ public class Robot extends TimedRobot {
         drivetrain.resetLocation();
         drivetrain.resetEncoders();
 
+
         // String autoSelected = SmartDashboard.getString("Auto Selector","Default"); switch(autoSelected) { case "My Auto": autonomousCommand = new MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new ExampleCommand(); break; }
-        try {
-            csv = new CSV("test.csv", "left distance", "right distance", "time");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
 
         // schedule the autonomous command (example)
         m_autonomousCommand = m_chooser.getSelected();
@@ -111,11 +133,11 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.start();
         }
 
+
         //Create the path and points.
         Path path = new Path();
         path.appendWaypoint(new Waypoint(0, 0));
         path.appendWaypoint(new Waypoint(0, 1));
-        path.appendWaypoint(new Waypoint(-2, 2));
         //Generate the path to suit the pure pursuit.
         path.generateAll(Constants.WEIGHT_DATA, Constants.WEIGHT_SMOOTH, Constants.TOLERANCE, Constants.MAX_ACCEL, Constants.MAX_PATH_VELOCITY);
 
@@ -141,8 +163,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putString("current location", drivetrain.currentLocation.getX() + " " + drivetrain.currentLocation.getY());
         SmartDashboard.putNumber("current Angle" , navx.getAngle());
         //take the current pint and update her into the csv file
-        csv.update(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY(), Timer.getMatchTime());
-
+        if (csv != null) csv.update(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY() ,Timer.getMatchTime());
+        //if (csv == null) System.out.println(666);
 
     }
 
