@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
 
     
     public static OI m_oi;
-    public static CSV csv;
+    public CSV csv;
     Command m_autonomousCommand;
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -99,13 +99,6 @@ public class Robot extends TimedRobot {
         drivetrain.resetEncoders();
 
         // String autoSelected = SmartDashboard.getString("Auto Selector","Default"); switch(autoSelected) { case "My Auto": autonomousCommand = new MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new ExampleCommand(); break; }
-        m_autonomousCommand = m_chooser.getSelected();
-        /*
-         * String autoSelected = SmartDashboard.getString("Auto Selector",
-         * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-         * = new MyAutoCommand(); break; case "Default Auto": default:
-         * autonomousCommand = new ExampleCommand(); break; }
-         */
         try {
             csv = new CSV("test.csv", "left distance", "right distance", "time");
         } catch (FileNotFoundException e) {
