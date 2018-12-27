@@ -13,7 +13,6 @@ public class PurePursue extends Command {
     private Path path; //Command specific path to follow
     private Point currentPoint = new Point(0, 0); //holds X and Y variables for the robot
     private Point currentLookahead; //holds X and Y variables for the Lookahead point
-    private int direction; //whether the robot drives forward or backwards (-1 or 1)
     private double lastLeftSpeed; //the last speed of the left encoder
     private double lastRightSpeed; //the last speed of the right encoder
     private double lastLeftEncoder; //the last distance of the left encoder
@@ -21,6 +20,9 @@ public class PurePursue extends Command {
     private double lastLookaheadDistance; //distance of the last lookahead from the start of the path
     private double kP, kA, kV;
     private double lookaheadRadius;
+    private boolean isRelative;
+    private int direction; //whether the robot drives forward or backwards (-1 or 1)
+    private double initAngle;
 
     /**
      * An implementation of these command class. for more information see documentation on the wpilib command class.
@@ -32,7 +34,7 @@ public class PurePursue extends Command {
      * @param kA              driving constant. Multiplied by the robots acceleration.
      * @param kV              driving constant. Multiplied by the target velocity of the nearest point.
      */
-    public PurePursue(Path path, boolean isReversed, double lookaheadRadius, double kP, double kA, double kV) {
+    public PurePursue(Path path, double lookaheadRadius, double kP, double kA, double kV, boolean isRelative, boolean isReversed) {
         requires(drivetrain);
         this.lookaheadRadius = lookaheadRadius;
         this.kP = kP;
@@ -40,18 +42,26 @@ public class PurePursue extends Command {
         this.kV = kV;
         direction = isReversed ? -1 : 1;
         this.path = path;
+
+        this.isRelative = isRelative;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        currentPoint = new Waypoint(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY());
+        if(isRelative) {
+            initAngle = drivetrain.getAngle() + (direction == -1 ? 180 : 0);
+            currentPoint = new Point(0, 0);
+        }
+        else {
+            initAngle = 0;
+            currentPoint = new Point(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY());
+        }
+
         lastLeftEncoder = drivetrain.getLeftDistance();
         lastRightEncoder = drivetrain.getRightDistance();
-        //initAngle = drivetrain.getAngle() + (direction == -1 ? 180 : 0);
         currentLookahead = path.getWaypoint(0);
         lastLeftSpeed = direction * drivetrain.getLeftSpeed();
         lastRightSpeed = direction * drivetrain.getRightSpeed();
-        drivetrain.resetLocation();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -91,8 +101,8 @@ public class PurePursue extends Command {
         double distance = ((drivetrain.getLeftDistance() - lastLeftEncoder) + (drivetrain.getRightDistance() - lastRightEncoder)) / 2;
 
         //update the x, y coordinates based on the robot angle and the distance the robot moved.
-        currentPoint.setX(currentPoint.getX() + direction * distance * Math.sin(drivetrain.getAngle() * (Math.PI / 180.0)));
-        currentPoint.setY(currentPoint.getY() + direction * distance * Math.cos(drivetrain.getAngle() * (Math.PI / 180.0)));
+        currentPoint.setX(currentPoint.getX() + direction * distance * Math.sin((drivetrain.getAngle() - initAngle) * (Math.PI / 180.0)));
+        currentPoint.setY(currentPoint.getY() + direction * distance * Math.cos((drivetrain.getAngle() - initAngle) * (Math.PI / 180.0)));
 
         //updates values for next run
         lastLeftEncoder = drivetrain.getLeftDistance();
@@ -215,7 +225,7 @@ public class PurePursue extends Command {
      */
     private double distanceXLookahead() {
         //Calculates the robot's line of view  as a line formula (a*x + b*y + c)/sqrt(a*a + b*b)
-        double angle = 90 - drivetrain.getAngle();
+        double angle = 90 - (drivetrain.getAngle() - initAngle);
         angle = Math.toRadians(angle);
         double a = -Math.tan(angle);
         double c = Math.tan(angle) * currentPoint.getX() - currentPoint.getY();
