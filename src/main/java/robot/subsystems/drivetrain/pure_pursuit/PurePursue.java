@@ -75,8 +75,8 @@ public class PurePursue extends Command {
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
 //        return false;
-        boolean closeToLast = (drivetrain.currentLocation.getX() >= path.getWaypoint(path.length() - 1).getX() - 0.1 &&
-                drivetrain.currentLocation.getY() >= path.getWaypoint(path.length() - 1).getY() - 0.1);
+        boolean closeToLast = (drivetrain.currentLocation.getX() >= path.getWaypoint(path.length() - 1).getX() - 0.3 &&
+                drivetrain.currentLocation.getY() >= path.getWaypoint(path.length() - 1).getY() - 0.3);
         return (closeToLast &&
                 drivetrain.getLeftSpeed() < Constants.STOP_SPEED_THRESH &&
                 drivetrain.getRightSpeed() < Constants.STOP_SPEED_THRESH);
