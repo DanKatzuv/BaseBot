@@ -1,5 +1,7 @@
 package robot;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -26,9 +28,9 @@ public class CSV {
 
     }
 
-    public void update(double... arguments) {
+    public void update(NetworkTableEntry... arguments) {
         if (arguments.length == count_args) {
-            for (double arguement : arguments) {
+            for (NetworkTableEntry arguement : arguments) {
                 sb.append(arguement);
                 sb.append(',');
             }

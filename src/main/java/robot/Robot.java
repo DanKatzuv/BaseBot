@@ -8,6 +8,9 @@
 package robot;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -43,7 +46,10 @@ public class Robot extends TimedRobot {
     
     public static OI m_oi;
     public CSV csv;
-
+    public NetworkTable robotData;
+    public NetworkTableEntry xEntry;
+    public NetworkTableEntry yEntry;
+    public NetworkTableEntry timeEntry;
 
 
     Command m_autonomousCommand;
@@ -59,6 +65,12 @@ public class Robot extends TimedRobot {
         //m_chooser.setDefaultOption("Default Auto", new JoystickDrive());
         // chooser.addOption("My Auto", new MyAutoCommand());
         SmartDashboard.putData("Auto mode", m_chooser);
+        NetworkTableInstance inst = NetworkTableInstance.getDefault();
+        robotData = inst.getTable("dataTable");
+        xEntry = robotData.getEntry("x");
+        yEntry = robotData.getEntry("y");
+        timeEntry = robotData.getEntry("time");
+
         navx.reset();
         File file = new File("test.csv");
         Set<PosixFilePermission> perms = new HashSet<>();
@@ -155,6 +167,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
+        xEntry.setDouble(drivetrain.currentLocation.getX());
+        yEntry.setDouble(drivetrain.currentLocation.getY());
+        timeEntry.setDouble(Timer.getMatchTime());
 
         Scheduler.getInstance().run();
         SmartDashboard.putNumber("right distance", drivetrain.getRightDistance());
@@ -162,7 +177,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putString("current location", drivetrain.currentLocation.getX() + " " + drivetrain.currentLocation.getY());
         SmartDashboard.putNumber("current Angle" , navx.getAngle());
         //take the current pint and update her into the csv file
-        if (csv != null) csv.update(drivetrain.currentLocation.getX(), drivetrain.currentLocation.getY() ,Timer.getMatchTime());
+        if (csv != null) csv.update(xEntry, yEntry, timeEntry);
         //if (csv == null) System.out.println(666);
 
     }
