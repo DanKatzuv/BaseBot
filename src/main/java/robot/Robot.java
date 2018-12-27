@@ -13,7 +13,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -167,9 +166,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        xEntry.setDouble(drivetrain.currentLocation.getX());
-        yEntry.setDouble(drivetrain.currentLocation.getY());
-        timeEntry.setDouble(Timer.getMatchTime());
+
 
         Scheduler.getInstance().run();
         SmartDashboard.putNumber("right distance", drivetrain.getRightDistance());
@@ -177,7 +174,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putString("current location", drivetrain.currentLocation.getX() + " " + drivetrain.currentLocation.getY());
         SmartDashboard.putNumber("current Angle" , navx.getAngle());
         //take the current pint and update her into the csv file
-        if (csv != null) csv.update(xEntry, yEntry, timeEntry);
         //if (csv == null) System.out.println(666);
 
     }
