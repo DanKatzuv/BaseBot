@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import robot.Robot;
 import robot.subsystems.drivetrain.commands.JoystickDrive;
 import robot.subsystems.drivetrain.pure_pursuit.Point;
+import robot.subsystems.drivetrain.pure_pursuit.PurePursue;
 
 /**
  * Add your docs here.
@@ -91,14 +92,14 @@ public class Drivetrain extends Subsystem {
      * @return The distance driven on the right side of the robot since the last reset
      */
     public double getRightDistance() {
-        return rightEncoder.getDistance();
+        return -1*rightEncoder.getDistance()* PurePursue.direction;
     }
 
     /**
      * @return The distance driven on the left side of the robot since the last reset
      */
     public double getLeftDistance() {
-        return -leftEncoder.getDistance();
+        return leftEncoder.getDistance()* PurePursue.direction;
     }
 
     public void resetEncoders() {
