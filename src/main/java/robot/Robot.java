@@ -126,7 +126,8 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
         navx.reset();
-
+        drivetrain.resetEncoders();
+        drivetrain.resetLocation();
     }
 
     /**
