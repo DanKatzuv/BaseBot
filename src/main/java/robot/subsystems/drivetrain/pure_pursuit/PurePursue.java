@@ -3,6 +3,7 @@ package robot.subsystems.drivetrain.pure_pursuit;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import static robot.Robot.drivetrain;
+import static robot.Robot.navx;
 
 /**
  * The methods written here are all part of the Pure pursuit algorithm
@@ -21,7 +22,7 @@ public class PurePursue extends Command {
     private double kP, kA, kV;
     private double lookaheadRadius;
     private boolean isRelative;
-    private int direction; //whether the robot drives forward or backwards (-1 or 1)
+    public static int direction; //whether the robot drives forward or backwards (-1 or 1)
     private double initAngle;
 
     /**
@@ -42,12 +43,16 @@ public class PurePursue extends Command {
         this.kV = kV;
         direction = isReversed ? -1 : 1;
         this.path = path;
-
+        lastRightEncoder = 0;
+        lastLeftEncoder = 0;
         this.isRelative = isRelative;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        drivetrain.resetLocation();
+        drivetrain.resetEncoders();
+        navx.reset();
         if(isRelative) {
             initAngle = drivetrain.getAngle() + (direction == -1 ? 180 : 0);
             currentPoint = new Point(0, 0);
@@ -68,18 +73,16 @@ public class PurePursue extends Command {
     protected void execute() {
         updatePoint();
         updateLookaheadInPath(path);
-        drivetrain.setSpeed(getLeftSpeedVoltage(path), getRightSpeedVoltage(path));
+        drivetrain.setSpeed(direction*getLeftSpeedVoltage(path), direction*getRightSpeedVoltage(path));
 
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
 //        return false;
-        boolean closeToLast = (drivetrain.currentLocation.getX() >= path.getWaypoint(path.length() - 1).getX() - 0.3 &&
-                drivetrain.currentLocation.getY() >= path.getWaypoint(path.length() - 1).getY() - 0.3);
-        return (closeToLast &&
-                drivetrain.getLeftSpeed() < Constants.STOP_SPEED_THRESH &&
-                drivetrain.getRightSpeed() < Constants.STOP_SPEED_THRESH);
+        boolean closeToLast = (drivetrain.currentLocation.getX() >= path.getWaypoint(path.length() - 1).getX() - 0.1 &&
+                drivetrain.currentLocation.getY() >= path.getWaypoint(path.length() - 1).getY() - 0.1);
+        return false;
     }
 
     // Called once after isFinished returns true
