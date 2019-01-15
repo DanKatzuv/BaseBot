@@ -14,24 +14,27 @@ public class TestCommandGroup extends CommandGroup {
 
     public TestCommandGroup() {
         //Create the path and points.
-        Path path = new Path();
-        path.appendWaypoint(new Waypoint(0, 0));
-        path.appendWaypoint(new Waypoint(0,0.3));
-        path.appendWaypoint(new Waypoint(0.8, 1));
-        //Generate the path to suit the pure pursuit.
-        path.generateAll(Constants.WEIGHT_DATA, Constants.WEIGHT_SMOOTH, Constants.TOLERANCE, Constants.MAX_ACCEL, Constants.MAX_PATH_VELOCITY);
+
         Path path2 = new Path();
         path2.appendWaypoint(new Waypoint(0, 0));
         path2.appendWaypoint(new Waypoint(0, 1));
+        path2.appendWaypoint(new Waypoint(1, 1));
         //Generate the path to suit the pure pursuit.
         path2.generateAll(Constants.WEIGHT_DATA, Constants.WEIGHT_SMOOTH, Constants.TOLERANCE, Constants.MAX_ACCEL, Constants.MAX_PATH_VELOCITY);
+        Path path = new Path();
+        path.appendWaypoint(new Waypoint(0, 0));
+        path.appendWaypoint(new Waypoint(0, 1));
+        path.appendWaypoint(new Waypoint(0, 0));
+        //Generate the path to suit the pure pursuit.
+        path.generateAll(Constants.WEIGHT_DATA, Constants.WEIGHT_SMOOTH, Constants.TOLERANCE, Constants.MAX_ACCEL, Constants.MAX_PATH_VELOCITY);
 
         PurePursue pursue = new PurePursue(path, Constants.LOOKAHEAD_DISTANCE, Constants.kP, Constants.kA, Constants.kV, true, false);
+
         addSequential(pursue);
-        addSequential(new PurePursue(path, Constants.LOOKAHEAD_DISTANCE, Constants.kP, Constants.kA, Constants.kV, true, true));
+//        addSequential(new PurePursue(path2, Constants.LOOKAHEAD_DISTANCE, Constants.kP, Constants.kA, Constants.kV, true, false));
         //Print the variables for testing.
         SmartDashboard.putString("pursue command", "start");
-        SmartDashboard.putString("last waypoint", path.getWaypoint(path.length()-1).toString());
+//        SmartDashboard.putString("last waypoint", path.getWaypoint(path.length()-1).toString());
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());

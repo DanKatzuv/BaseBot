@@ -16,6 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import robot.subsystems.drivetrain.Drivetrain;
 import robot.subsystems.drivetrain.commands.TestCommandGroup;
+import robot.subsystems.drivetrain.pure_pursuit.Constants;
+import robot.subsystems.drivetrain.pure_pursuit.Path;
+import robot.subsystems.drivetrain.pure_pursuit.PurePursue;
+import robot.subsystems.drivetrain.pure_pursuit.Waypoint;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -90,6 +94,7 @@ public class Robot extends TimedRobot {
         navx.reset();
         drivetrain.resetLocation();
         drivetrain.resetEncoders();
+        System.out.println("start encoder value"  + drivetrain.getRightDistance() + " , " + drivetrain.getLeftDistance());
 
         // String autoSelected = SmartDashboard.getString("Auto Selector","Default"); switch(autoSelected) { case "My Auto": autonomousCommand = new MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new ExampleCommand(); break; }
         // schedule the autonomous command (example)
@@ -125,7 +130,10 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
-        navx.reset();
+        /*navx.reset();
+        drivetrain.resetLocation();
+        drivetrain.resetEncoders();
+        */
 
     }
 
@@ -137,8 +145,13 @@ public class Robot extends TimedRobot {
 
         Scheduler.getInstance().run();
         SmartDashboard.putNumber("current Angle teleop" , navx.getAngle());
+        SmartDashboard.putNumber("current yaw teleop", navx.getYaw());
+        SmartDashboard.putNumber("current pitch teleop", navx.getRoll());
         SmartDashboard.putNumber("current left encoder", drivetrain.getLeftDistance());
         SmartDashboard.putNumber("current right encoder" , drivetrain.getRightDistance());
+
+
+
 
     }
 
