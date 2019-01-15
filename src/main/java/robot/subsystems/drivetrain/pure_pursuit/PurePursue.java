@@ -87,7 +87,7 @@ public class PurePursue extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-        drivetrain.setSpeed(0, 0);
+        this.end();
     }
 
     // Called when another command which requires one or more of the same
