@@ -92,14 +92,14 @@ public class Drivetrain extends Subsystem {
      * @return The distance driven on the right side of the robot since the last reset
      */
     public double getRightDistance() {
-        return -1*rightEncoder.getDistance()* PurePursue.direction;
+        return rightEncoder.getDistance()* PurePursue.direction;
     }
 
     /**
      * @return The distance driven on the left side of the robot since the last reset
      */
     public double getLeftDistance() {
-        return leftEncoder.getDistance()* PurePursue.direction;
+        return -1*leftEncoder.getDistance()* PurePursue.direction;
     }
 
     public void resetEncoders() {
