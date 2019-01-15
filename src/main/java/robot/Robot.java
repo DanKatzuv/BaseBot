@@ -95,6 +95,21 @@ public class Robot extends TimedRobot {
         drivetrain.resetLocation();
         drivetrain.resetEncoders();
         System.out.println("start encoder value"  + drivetrain.getRightDistance() + " , " + drivetrain.getLeftDistance());
+        Path path2 = new Path();
+        path2.appendWaypoint(new Waypoint(0, 0));
+        path2.appendWaypoint(new Waypoint(0, 1));
+        //Generate the path to suit the pure pursuit.
+        path2.generateAll(Constants.WEIGHT_DATA, Constants.WEIGHT_SMOOTH, Constants.TOLERANCE, Constants.MAX_ACCEL, Constants.MAX_PATH_VELOCITY);
+        Path path = new Path();
+        path.appendWaypoint(new Waypoint(0, 0));
+        path.appendWaypoint(new Waypoint(0, 1));
+        //Generate the path to suit the pure pursuit.
+        path.generateAll(Constants.WEIGHT_DATA, Constants.WEIGHT_SMOOTH, Constants.TOLERANCE, Constants.MAX_ACCEL, Constants.MAX_PATH_VELOCITY);
+
+        PurePursue pursue = new PurePursue(path, Constants.LOOKAHEAD_DISTANCE, Constants.kP, Constants.kA, Constants.kV, true, false);
+
+
+        PurePursue pursue1 = new PurePursue(path2, Constants.LOOKAHEAD_DISTANCE, Constants.kP, Constants.kA, Constants.kV, true, false);
 
         // String autoSelected = SmartDashboard.getString("Auto Selector","Default"); switch(autoSelected) { case "My Auto": autonomousCommand = new MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new ExampleCommand(); break; }
         // schedule the autonomous command (example)
@@ -103,8 +118,8 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.start();
         }
 
-        TestCommandGroup pursue = new TestCommandGroup();
-        pursue.start(); //Run the command.
+        TestCommandGroup cmg = new TestCommandGroup(pursue, pursue1);
+        cmg.start(); //Run the command.
     }
 
     /**
