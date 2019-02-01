@@ -23,7 +23,7 @@ def ROBOT_CLASS = "robot.Robot"
 
 deploy {
     targets {
-        target("roborio", edu.wpi.first.gradlerio.frc.RoboRIO) {
+        target("roborio") {
             // Team can be overridden by command line, for use with VSCode
             team = getTeamOrDefault(5987)
         }
@@ -34,6 +34,7 @@ deploy {
             // Debug can be overridden by command line, for use with VSCode
             debug = getDebugOrDefault(false)
         }
+        
     }
 }
 
